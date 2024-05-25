@@ -2,6 +2,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 const helmet = require('helmet');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +10,29 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(helmet());
+
+let BlogSchema = mongoose.Schema({
+    title:{
+        type:String,
+        required:true
+    },
+    text:{
+        type: String,
+        required: true
+    },
+    author:{
+        type:String,
+        required:false,
+        default:"anonymous"
+    },
+    createDate:{
+        type:Date,
+        required:false,
+        default:Date.now
+    }
+});
+
+let Blog = mongoose.model('Blog', BlogSchema);
 
 app.get('/api/github/user/:username/repos', async (req, res) => {
     try {
